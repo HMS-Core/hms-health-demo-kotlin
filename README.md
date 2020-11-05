@@ -1,4 +1,4 @@
-# Health kit demo
+# HMS Health Kit Demo for kotlin
 English | [中文](https://github.com/HMS-Core/hms-health-demo-kotlin/blob/master/README_ZH.md)
 ## Table of Contents
 
