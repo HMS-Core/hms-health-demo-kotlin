@@ -121,16 +121,20 @@ class HealthKitAuthClientActivity : AppCompatActivity() {
         // Developers need to add scopes according to their specific needs.
 
         // View and save steps in HUAWEI Health Kit.
-        scopeList.add(Scope(Scopes.HEALTHKIT_STEP_BOTH))
+        scopeList.add(Scope(Scopes.HEALTHKIT_STEP_READ))
+        scopeList.add(Scope(Scopes.HEALTHKIT_STEP_WRITE))
 
         // View and save height and weight in HUAWEI Health Kit.
-        scopeList.add(Scope(Scopes.HEALTHKIT_HEIGHTWEIGHT_BOTH))
+        scopeList.add(Scope(Scopes.HEALTHKIT_HEIGHTWEIGHT_READ))
+        scopeList.add(Scope(Scopes.HEALTHKIT_HEIGHTWEIGHT_WRITE))
 
         // View and save the heart rate data in HUAWEI Health Kit.
-        scopeList.add(Scope(Scopes.HEALTHKIT_HEARTRATE_BOTH))
+        scopeList.add(Scope(Scopes.HEALTHKIT_HEARTRATE_READ))
+        scopeList.add(Scope(Scopes.HEALTHKIT_HEARTRATE_WRITE))
 
         // View and save activityRecord in HUAWEI Health Kit.
-        scopeList.add(Scope(Scopes.HEALTHKIT_ACTIVITY_RECORD_BOTH))
+        scopeList.add(Scope(Scopes.HEALTHKIT_ACTIVITY_RECORD_READ))
+        scopeList.add(Scope(Scopes.HEALTHKIT_ACTIVITY_RECORD_WRITE))
 
         // Configure authorization parameters.
         val authParamsHelper = HuaweiIdAuthParamsHelper(HuaweiIdAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
