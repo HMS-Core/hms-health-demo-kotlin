@@ -168,6 +168,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             .setDataCollectorName("test1")
             .build()
         val samplePoint1 = SamplePoint.Builder(dataCollector2).build()
+	samplePoint1.setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS)
         samplePoint1.getFieldValue(Field.FIELD_STEPS).setIntValue(352)
         activitySummary.dataSummary = Arrays.asList(samplePoint1)
 
