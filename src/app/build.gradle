@@ -45,8 +45,8 @@ android {
         androidTestImplementation 'androidx.test.ext:junit:1.1.0'
         androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
-        implementation 'com.huawei.hms:health:5.0.4.300'
         implementation 'com.android.support:multidex:1.0.3'
         implementation 'com.squareup.okhttp3:okhttp:3.14.6'
+        implementation 'com.huawei.hms:health:5.2.0.301'
     }
 }

@@ -7,6 +7,8 @@ import android.util.Log
 import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.huawei.hmf.tasks.OnFailureListener
+import com.huawei.hmf.tasks.OnSuccessListener
 import com.huawei.hms.hihealth.DataController
 import com.huawei.hms.hihealth.HiHealthOptions
 import com.huawei.hms.hihealth.HiHealthStatusCodes
@@ -14,6 +16,7 @@ import com.huawei.hms.hihealth.HuaweiHiHealth
 import com.huawei.hms.hihealth.data.DataCollector
 import com.huawei.hms.hihealth.data.DataType
 import com.huawei.hms.hihealth.data.Field
+import com.huawei.hms.hihealth.data.SamplePoint
 import com.huawei.hms.hihealth.data.SampleSet
 import com.huawei.hms.hihealth.options.DeleteOptions
 import com.huawei.hms.hihealth.options.ReadOptions
@@ -269,6 +272,40 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
     }
 
     /**
+     * read the latest data basing on data type
+     *
+     * @param view (indicating a UI object)
+     */
+    fun readLatestData(view: View) {
+        // 1. Use the specified data type (DT_INSTANTANEOUS_HEIGHT) to call the data controller to query
+        // the latest data of this data type.
+        val dataTypes = ArrayList<DataType>()
+        dataTypes.add(DataType.DT_INSTANTANEOUS_HEIGHT)
+        val readLatestDatas = dataController!!.readLatestData(dataTypes)
+
+        // 2. Calling the data controller to query the latest data is an asynchronous operation.
+        // Therefore, a listener needs to be registered to monitor whether the data query is successful or not.
+        readLatestDatas.addOnSuccessListener(OnSuccessListener<Map<DataType, SamplePoint>> { samplePointMap ->
+            logger("Success read latest data from HMS core")
+            if (samplePointMap != null) {
+                for (dataType in dataTypes) {
+                    if (samplePointMap.containsKey(dataType)) {
+                        showSamplePoint(samplePointMap[dataType]!!)
+                    } else {
+                        logger("The DataType " + dataType.name + " has no latest data")
+                    }
+                }
+            }
+        })
+        readLatestDatas.addOnFailureListener(OnFailureListener { e ->
+            val errorCode = e.message
+            val errorMsg = HiHealthStatusCodes.getStatusCodeMessage(Integer.parseInt(errorCode!!))
+            logger("$errorCode: $errorMsg")
+        })
+    }
+
+
+    /**
      * Use the data controller to query the summary data of the daily by data type.
      *
      * @param view (indicating a UI object)
@@ -334,6 +371,23 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
                 logger("Field: " + field.name + " Value: " + samplePoint.getFieldValue(field))
             }
         }
+    }
+
+    /**
+     * Print the SamplePoint as an output.
+     *
+     * @param samplePoint (indicating the sampling point)
+     */
+    private fun showSamplePoint(samplePoint: SamplePoint) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
+
+        logger("Sample point type: " + samplePoint.dataType.name)
+        logger("Start: " + dateFormat.format(Date(samplePoint.getStartTime(TimeUnit.MILLISECONDS))))
+        logger("End: " + dateFormat.format(Date(samplePoint.getEndTime(TimeUnit.MILLISECONDS))))
+        for (field in samplePoint.dataType.fields) {
+            logger("Field: " + field.name + " Value: " + samplePoint.getFieldValue(field))
+        }
+        logger(System.lineSeparator())
     }
 
     /**
