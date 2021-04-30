@@ -136,6 +136,10 @@ class HealthKitAuthClientActivity : AppCompatActivity() {
         scopeList.add(Scope(Scopes.HEALTHKIT_ACTIVITY_RECORD_READ))
         scopeList.add(Scope(Scopes.HEALTHKIT_ACTIVITY_RECORD_WRITE))
 
+        // View and save sleep in HUAWEI Health Kit.
+        scopeList.add(Scope(Scopes.HEALTHKIT_SLEEP_READ))
+        scopeList.add(Scope(Scopes.HEALTHKIT_SLEEP_WRITE))
+
         // Configure authorization parameters.
         val authParamsHelper = HuaweiIdAuthParamsHelper(HuaweiIdAuthParams.DEFAULT_AUTH_REQUEST_PARAM)
         val authParams = authParamsHelper.setIdToken().setAccessToken().setScopeList(scopeList).createParams()
