@@ -37,7 +37,9 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".auth.HealthKitAuthActivity" />
+        <activity android:name=".auth.HealthKitAuthClientActivity" />
+        <activity android:name=".auth.HealthKitCloudLogin" />
+        <activity android:name=".auth.HealthKitAuthCloudActivity" />
 
         <service android:name="com.huawei.demo.health.PersistService">
             <intent-filter android:priority="1000">

@@ -168,7 +168,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             .setDataCollectorName("test1")
             .build()
         val samplePoint1 = SamplePoint.Builder(dataCollector2).build()
-            .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS);
+	samplePoint1.setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS)
         samplePoint1.getFieldValue(Field.FIELD_STEPS).setIntValue(352)
         activitySummary.dataSummary = Arrays.asList(samplePoint1)
 
@@ -273,7 +273,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
 	 EndTime""" + samplePoint.getEndTime(
                     TimeUnit.MILLISECONDS
                 )
-                        + "\n\t SamplingTime" + samplePoint.getSamplingTime(TimeUnit.MILLISECONDS) + "\n\t FieldValues" + samplePoint.fieldValues
+                    + "\n\t SamplingTime" + samplePoint.getSamplingTime(TimeUnit.MILLISECONDS) + "\n\t FieldValues" + samplePoint.fieldValues
             )
         }
         // 以下打印配速信息
@@ -370,13 +370,13 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val timeFormat = DateFormat.getTimeInstance()
         logger(
             ("Returned for ActivityRecord: " + activityRecord.name + "\n\tActivityRecord Identifier is "
-                    + activityRecord.id + "\n\tActivityRecord created by app is " + activityRecord.packageName
-                    + "\n\tDescription: " + activityRecord.desc + "\n\tStart: "
-                    + dateFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + " "
-                    + timeFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + "\n\tEnd: "
-                    + dateFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + " "
-                    + timeFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + "\n\tActivity:"
-                    + activityRecord.activityType)
+                + activityRecord.id + "\n\tActivityRecord created by app is " + activityRecord.packageName
+                + "\n\tDescription: " + activityRecord.desc + "\n\tStart: "
+                + dateFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + " "
+                + timeFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + "\n\tEnd: "
+                + dateFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + " "
+                + timeFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + "\n\tActivity:"
+                + activityRecord.activityType)
         )
     }
 
@@ -404,11 +404,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val isNum = pattern.matcher(errorCode!!.toCharArray().toString())
         if (isNum.matches()) {
             val errorMsg =
-                HiHealthStatusCodes.getStatusCodeMessage(
-                    Integer.parseInt(
-                        errorCode.toCharArray().toString()
-                    )
-                )
+                HiHealthStatusCodes.getStatusCodeMessage(Integer.parseInt(errorCode.toCharArray().toString()))
             logger("$api failure $errorCode:$errorMsg")
         } else {
             logger("$api failure $errorCode")
