@@ -4,8 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.huawei.demo.health.auth.HealthKitAuthClientActivity
-import com.huawei.demo.health.auth.HealthKitAuthCloudActivity
+import com.huawei.demo.health.auth.HealthKitAuthActivity
 
 class HealthKitMainActivity : AppCompatActivity() {
     private val TAG = "KitConnectActivity"
@@ -61,17 +60,7 @@ class HealthKitMainActivity : AppCompatActivity() {
      * @param view UI object
      */
     fun onLoginClick(view: View) {
-        val intent = Intent(this, HealthKitAuthClientActivity::class.java)
-        startActivity(intent)
-    }
-
-    /**
-     * Huawei ID signing In and authorization through cloud interfaces.
-     *
-     * @param view UI object
-     */
-    fun onCloudLoginClick(view: View) {
-        val intent = Intent(this@HealthKitMainActivity, HealthKitAuthCloudActivity::class.java)
+        val intent = Intent(this, HealthKitAuthActivity::class.java)
         startActivity(intent)
     }
 }
