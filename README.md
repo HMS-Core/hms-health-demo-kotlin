@@ -1,5 +1,5 @@
-# HMS Health Kit Demo for kotlin
-English | [中文](https://github.com/HMS-Core/hms-health-demo-kotlin/blob/master/README_ZH.md)
+# HMS Health Kit Demo for Java
+English | [中文](https://github.com/HMS-Core/hms-health-demo-java/blob/master/README_ZH.md)
 ## Table of Contents
 
  * [Introduction](#introduction)
@@ -16,23 +16,27 @@ Health demo code encapsulates APIs of the HUAWEI Health Kit. It provides demo pr
 The following describes the functions of Health Kit:  
 1)  Login and Authorization  
 This function applies to login the account and enable the authorization.  
-Android APIs code location:  \app\src\main\java\com\huawei\demo\health\auth\HealthKitAuthActivity.kt   
+Android APIs code location:  \app\src\main\java\com\huawei\demo\health\auth\HealthKitAuthActivity.java     
     
 2)  Operate health and sport data  
 The function has ability to add/delete/update/query the health and sport data.  
-Code location: \app\src\main\java\com\huawei\demo\health\HealthKitDataControllerActivity.kt   
-    
-3) Auto-record the step count  
-This function can enable and disable the automatically record method for the step count.  
-Code location: \app\src\main\java\com\huawei\demo\health\HealthKitAutoRecorderControllerActivity.kt   
+Code location: \app\src\main\java\com\huawei\demo\health\HealthKitDataControllerActivity.java   
+     
+3) Auto-record the step count    
+This function can enable and disable the automatically record method for the step count.   
+Code location: \app\src\main\java\com\huawei\demo\health\HealthKitAutoRecorderControllerActivity.java   
     
 4) Operate Activity Record   
 This function can create and manage a single sport or activity.  
-Code location:  \app\src\main\java\com\huawei\demo\health\HealthKitActivityRecordControllerActivity.kt   
+Code location:  \app\src\main\java\com\huawei\demo\health\HealthKitActivityRecordControllerActivity.java   
     
 5) Operate DataType and Records  
 This function can add/read DataType and cancel All Records.   
-Code location:  \app\src\main\java\com\huawei\demo\health\HealthKitSettingControllerActivity.kt   
+Code location:  \app\src\main\java\com\huawei\demo\health\HealthKitSettingControllerActivity.java   
+    
+5) Operate Health Record  
+This function can add/read/update a health record. Currently, the data types of the tachycardia bradycardia are supported.   
+Code location:  \app\src\main\java\com\huawei\demo\health\HealthKitHealthRecordControllerActivity.java   
 
 ## Getting Started
 Before using Health demo code, check whether the IDE environment has been installed. 
@@ -52,14 +56,14 @@ To use functions provided by packages in examples, you need to set parameters as
 ## Supported Environments
 * Android Studio 3.0 or later
 * Java SDK 1.8 or later
-* HMS Core 4.0.2.300 or later
+* HMS Core 5.3.0.300 or later
 
 ## Result
-   <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_6.png" width = 30% height = 30%>
-   <img src="images/result_2.png" width = 30% height = 30%>
-   <img src="images/result_3.png" width = 30% height = 30%>
-   <img src="images/result_4.png" width = 30% height = 30%>
-   <img src="images/result_5.png" width = 30% height = 30%>
+   <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_5.png" width = 30% height = 30%>
+   <img src="images/result_2.png" width = 30% height = 30%> <img src="images/result_6.png" width = 30% height = 30%>
+   <img src="images/result_3.png" width = 30% height = 30%> <img src="images/result_7.png" width = 30% height = 30%>
+   <img src="images/result_4.png" width = 30% height = 30%> 
+   
    
 ## Question or Issues
 If you want to evaluate more about HMS Core, [r/HMSCore on Reddit](https://www.reddit.com/r/HuaweiDevelopers/) is for you to keep up with latest news about HMS Core, and to exchange insights with other developers.
@@ -69,8 +73,7 @@ If you have questions about how to use HMS samples, try the following options:
 `huawei-mobile-services`.
 - [Huawei Developer Forum](https://forums.developer.huawei.com/forumPortal/en/home?fid=0101187876626530001) HMS Core Module is great for general questions, or seeking recommendations and opinions.
 
-If you run into a bug in our samples, please submit an [issue](https://github.com/HMS-Core/hms-health-demo-kotlin/issues) to the Repository. Even better you can submit a [Pull Request](https://github.com/HMS-Core/hms-health-demo/pulls) with a fix.
+If you run into a bug in our samples, please submit an [issue](https://github.com/HMS-Core/hms-health-demo-java/issues) to the Repository. Even better you can submit a [Pull Request](https://github.com/HMS-Core/hms-health-demo-java/pulls) with a fix.
 	
 ##  License
-   Health kit demo is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
-   
+Health kit demo is licensed under the [Apache License, version 2.0](http://www.apache.org/licenses/LICENSE-2.0).

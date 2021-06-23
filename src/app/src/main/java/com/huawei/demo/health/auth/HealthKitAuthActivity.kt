@@ -1,8 +1,22 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2021-2021. All rights reserved.
+ * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package com.huawei.demo.health.auth
+
+import java.util.Locale
 
 import android.app.Activity
 import android.content.Context
@@ -16,15 +30,11 @@ import android.widget.LinearLayout
 import android.widget.TextView
 
 import com.huawei.demo.health.R
-import com.huawei.hms.hihealth.HiHealthOptions
 import com.huawei.hms.hihealth.HiHealthStatusCodes
 import com.huawei.hms.hihealth.HuaweiHiHealth
 import com.huawei.hms.hihealth.SettingController
 import com.huawei.hms.hihealth.data.Scopes
 import com.huawei.hms.support.api.entity.common.CommonConstant
-import com.huawei.hms.support.hwid.HuaweiIdAuthManager
-import java.util.*
-
 
 /**
  * Check authorization result of HUAWEI Health to HUAWEI Health Kit by JAVA API
@@ -82,8 +92,6 @@ class HealthKitAuthActivity : Activity() {
             Scopes.HEALTHKIT_HEIGHTWEIGHT_READ, Scopes.HEALTHKIT_HEIGHTWEIGHT_WRITE,
             // View and save the heart rate data in HUAWEI Health Kit.
             Scopes.HEALTHKIT_HEARTRATE_READ, Scopes.HEALTHKIT_HEARTRATE_WRITE,
-            // View and save the sleep data in HUAWEI Health Kit.
-            Scopes.HEALTHKIT_SLEEP_READ, Scopes.HEALTHKIT_SLEEP_WRITE,
             // View and save activityRecord in HUAWEI Health Kit.
             Scopes.HEALTHKIT_ACTIVITY_RECORD_READ, Scopes.HEALTHKIT_ACTIVITY_RECORD_WRITE
         )
@@ -149,9 +157,7 @@ class HealthKitAuthActivity : Activity() {
     private fun initService() {
         mContext = this
         Log.i(TAG, "HiHealthKitClient connect to service")
-        val options = HiHealthOptions.builder().build()
-        val signInHuaweiId = HuaweiIdAuthManager.getExtendedAuthResult(options)
-        mSettingController = HuaweiHiHealth.getSettingController(mContext!!, signInHuaweiId)
+        mSettingController = HuaweiHiHealth.getSettingController(mContext!!)
     }
 
     private fun buildFailView(errorCode: Int) {

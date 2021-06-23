@@ -1,27 +1,55 @@
+/*
+ * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.huawei.demo.health
+
+import java.text.ParseException
+import java.text.SimpleDateFormat
+
+import java.util.ArrayList
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import java.util.Locale
+import java.util.regex.Pattern
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
+
+import androidx.appcompat.app.AppCompatActivity
+
 import com.huawei.hms.common.ApiException
-import com.huawei.hms.hihealth.*
+import com.huawei.hms.hihealth.DataController
+import com.huawei.hms.hihealth.HiHealthStatusCodes
+import com.huawei.hms.hihealth.HuaweiHiHealth
+import com.huawei.hms.hihealth.SettingController
 import com.huawei.hms.hihealth.data.DataCollector
 import com.huawei.hms.hihealth.data.DataType
 import com.huawei.hms.hihealth.data.Field
 import com.huawei.hms.hihealth.data.SampleSet
 import com.huawei.hms.hihealth.options.DataTypeAddOptions
 import com.huawei.hms.hihealth.options.ReadOptions
-import com.huawei.hms.support.hwid.HuaweiIdAuthManager
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import java.util.regex.Pattern
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -140,26 +168,13 @@ class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnIt
     }
 
     /**
-     * Initialize variable of mSignInHuaweiId.
+     *
      */
     private fun initDataController() {
-        // create HiHealth Options, donnot add any datatype here.
-        val hiHealthOptions = HiHealthOptions.builder().build()
-        // get AuthHuaweiId by HiHealth Options.
         // get DataController.
-        dataController = context?.let {
-            HuaweiHiHealth.getDataController(
-                it,
-                HuaweiIdAuthManager.getExtendedAuthResult(hiHealthOptions)
-            )
-        }
-
-        settingController = context?.let {
-            HuaweiHiHealth.getSettingController(
-                it,
-                HuaweiIdAuthManager.getExtendedAuthResult(hiHealthOptions)
-            )
-        }
+        dataController = context?.let { HuaweiHiHealth.getDataController(it) }
+        // get SettingController.
+        settingController = context?.let { HuaweiHiHealth.getSettingController(it) }
     }
 
     /**
@@ -258,7 +273,7 @@ class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnIt
     fun getAuthorization(view: View) {
         // get whether the Huawei Health app authorise access to HealthKit.
         // After calling this function, return true means authorised, false means not authorised.
-        settingController!!.getHealthAppAuthorisation()
+        settingController!!.getHealthAppAuthorization()
             .addOnFailureListener { e -> printFailureMessage(e, "getHealthAppAuthorisation") }
             .addOnCompleteListener { task ->
                 val res = if (task.isSuccessful) "success" else "failed"
@@ -356,6 +371,7 @@ class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnIt
             dataTypeNameView!!.text.toString(), HEALTHKIT_SELF_DEFINING_DATA_READ,
             HEALTHKIT_SELF_DEFINING_DATA_WRITE, HEALTHKIT_SELF_DEFINING_DATA_BOTH, fieldsList
         )
+        selfDataType.isFromSelfDefined = true
 
         // 1. Build the condition for data query: a DataCollector object.
         val dataCollector = DataCollector.Builder().setPackageName(context)

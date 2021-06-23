@@ -1,4 +1,28 @@
+/*
+ * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.huawei.demo.health
+
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.ArrayList
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import java.util.Locale
+import java.util.regex.Pattern
 
 import android.content.Context
 import android.os.Bundle
@@ -6,11 +30,12 @@ import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+
 import androidx.appcompat.app.AppCompatActivity
+
 import com.huawei.hmf.tasks.OnFailureListener
 import com.huawei.hmf.tasks.OnSuccessListener
 import com.huawei.hms.hihealth.DataController
-import com.huawei.hms.hihealth.HiHealthOptions
 import com.huawei.hms.hihealth.HiHealthStatusCodes
 import com.huawei.hms.hihealth.HuaweiHiHealth
 import com.huawei.hms.hihealth.data.DataCollector
@@ -21,12 +46,6 @@ import com.huawei.hms.hihealth.data.SampleSet
 import com.huawei.hms.hihealth.options.DeleteOptions
 import com.huawei.hms.hihealth.options.ReadOptions
 import com.huawei.hms.hihealth.options.UpdateOptions
-import com.huawei.hms.support.hwid.HuaweiIdAuthManager
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import java.util.regex.Pattern
 
 @Suppress("RECEIVER_NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
 class HealthKitDataControllerActivity : AppCompatActivity() {
@@ -57,16 +76,8 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
      * Initialize a data controller object.
      */
     private fun initDataController() {
-        // Obtain and set the read & write permissions for DT_CONTINUOUS_STEPS_DELTA and DT_INSTANTANEOUS_HEIGHT.
-        // Use the obtained permissions to obtain the data controller object.
-        val hiHealthOptions = HiHealthOptions.builder()
-            .addDataType(DataType.DT_CONTINUOUS_STEPS_DELTA, HiHealthOptions.ACCESS_READ)
-            .addDataType(DataType.DT_CONTINUOUS_STEPS_DELTA, HiHealthOptions.ACCESS_WRITE)
-            .addDataType(DataType.DT_INSTANTANEOUS_HEIGHT, HiHealthOptions.ACCESS_READ)
-            .addDataType(DataType.DT_INSTANTANEOUS_HEIGHT, HiHealthOptions.ACCESS_WRITE)
-            .build()
-        val signInHuaweiId = HuaweiIdAuthManager.getExtendedAuthResult(hiHealthOptions)
-        dataController = context!!.let { HuaweiHiHealth.getDataController(it, signInHuaweiId) }
+        // obtain the data controller object.
+        dataController = context!!.let { HuaweiHiHealth.getDataController(it) }
     }
 
     /**

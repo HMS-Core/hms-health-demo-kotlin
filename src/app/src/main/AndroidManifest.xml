@@ -30,6 +30,7 @@
         <activity android:name=".HealthKitDataControllerActivity"/>
         <activity android:name=".HealthKitAutoRecorderControllerActivity"/>
         <activity android:name=".HealthKitActivityRecordControllerActivity"/>
+        <activity android:name=".HealthKitHealthRecordControllerActivity"/>
         <activity android:name=".HealthKitMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

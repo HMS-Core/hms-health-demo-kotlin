@@ -1,5 +1,5 @@
 # HMS Healthkit Demo
-中文 | [English](https://github.com/HMS-Core/hms-health-demo-kotlin/blob/master/README.md)
+中文 | [English](https://github.com/HMS-Core/hms-health-demo-java/blob/master/README.md)
 ## 目录
 
  * [简介](#简介)
@@ -18,26 +18,30 @@
 华为运动健康服务功能如下：  
 1) 登录与授权  
 支持用户登录账号并获取用户对运动健康数据读写授权。  
-Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\HealthKitAuthActivity.kt       
+Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\HealthKitAuthActivity.java     
 
 2) 运动健康数据管理  
 支持用户对已授权的健康运动数据进行增加/删除/更新/查询等操作。  
-代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitDataControllerActivity.kt
+代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitDataControllerActivity.java
 
 3)	自动记录用户设备的步数  
-支持在用户授权条件下，用户添加对计步器的监听，并将传感器中的数据以用户已授权的运动健康数据类型实时返回给三方。  
-代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitAutoRecorderControllerActivity.kt
+支持在用户授权条件下，用户添加对计步器的监听，并将传感器中的数据以用户已授权的运动健康数据类型实时返回给三方。 
+代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitAutoRecorderControllerActivity.java
 
 4)	运动记录数据集操作  
 支持用户写入运动包含及其全部用户已授权的运动健康数据集，例如一次跑步运动包括跑步的开始时间，结束时间，以及运动数据（轨迹， 速度， 心率）等。  
 支持在用户授权条件下，用户创建一个运动（如跑步），然后开启跑步，在跑步过程中将用户授权的运动健康数据写入到生态数据平台，最后结束运动。  
 支持在用户授权条件下，管理用户的运动，包括查询，删除，修改运动数据等操作。  
-代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitActivityRecordControllerActivity.kt
+代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitActivityRecordControllerActivity.java  
 
 5)	用户自定义数据类型  
 支持在用户授权条件下，开发可以创建自定义的数据类型，并使用自定义的数据类型写入用户的运动健康数据到生态数据平台。  
 支持用户取消已经添加到生态数据平台里的监听器。  
-代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitSettingControllerActivity.kt 
+代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitSettingControllerActivity.java  
+
+6)	健康记录数据集操作  
+支持在用户授权条件下，管理用户对健康记录数据的新增、修改、查询操作。当前暂时只支持心率过速、心率过缓数据类型。  
+代码位置: \app\src\main\java\com\huawei\demo\health\HealthKitHealthRecordControllerActivity.java 
 
 
 
@@ -55,17 +59,17 @@ Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\Health
     * 	在项目build.gradle的all projects->repositories中，配置HMS SDK的maven地址：maven {url 'http://developer.huawei.com/repo/' }
     * 	在项目build.gradle的buildscript-> dependencies中，配置HMS SDK的maven配置：maven {url 'http://developer.huawei.com/repo/' }
 3.	编译依赖：在app层级的build.gradle文件中增加编译依赖：implementation 'com.huawei.hms:health:{version}'    
-4.	AppId信息：在应用的AndroidManifest.xml文件中添加在开发者联盟创建应用时生成的AppId信息。 
+4.	AppId信息：在应用的AndroidManifest.xml文件中添加在开发者联盟创建应用时生成的AppId信息。  
 
 
 ## 环境要求
 * Android Studio 3.0 及以上版本
 * Java SDK 1.8 及以上版本
-* HMS Core 4.0.2.300 及以上版本
+* HMS Core 5.3.0.300 及以上版本
 
 ## 操作结果
-   <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_6.png" width = 30% height = 30%> <img src="images/result_2.png" width = 30% height = 30%> <img src="images/result_3.png" width = 30% height = 30%>
-   <img src="images/result_4.png" width = 30% height = 30%> <img src="images/result_5.png" width = 30% height = 30%>
+   <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_6.png" width = 30% height = 30%> <img src="images/result_2.png" width = 30% height = 30%> <img src="images/result_3.png" width = 30% height = 30%> <img src="images/result_4.png" width = 30% height = 30%> <img src="images/result_5.png" width = 30% height = 30%> 
+   <img src="images/result_7.png" width = 30% height = 30%>
 	
 ## 技术支持
 如果您对HMS Core还处于评估阶段，可在[Reddit社区](https://www.reddit.com/r/HuaweiDevelopers/)获取关于HMS Core的最新讯息，并与其他开发者交流见解。
@@ -75,7 +79,7 @@ Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\Health
 标签下提问，有华为研发专家在线一对一解决您的问题。
 - 到[华为开发者论坛](https://developer.huawei.com/consumer/cn/forum/blockdisplay?fid=18) HMS Core板块与其他开发者进行交流。
 
-如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/HMS-Core/hms-health-demo-kotlin/issues)，也欢迎您提交[Pull Request](https://github.com/HMS-Core/hms-health-demo-kotlin/pulls)。
+如果您在尝试示例代码中遇到问题，请向仓库提交[issue](https://github.com/HMS-Core/hms-health-demo-java/issues)，也欢迎您提交[Pull Request](https://github.com/HMS-Core/hms-health-demo-java/pulls)。
 
 ##  授权许可
    华为运动健康服务示例代码经过 [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)授权许可。

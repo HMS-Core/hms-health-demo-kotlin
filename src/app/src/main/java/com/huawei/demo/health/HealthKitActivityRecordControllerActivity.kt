@@ -1,25 +1,54 @@
+/*
+ * Copyright 2020. Huawei Technologies Co., Ltd. All rights reserved.
+
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+
+ *   http://www.apache.org/licenses/LICENSE-2.0
+
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.huawei.demo.health
 
-import android.app.PendingIntent
+import java.text.DateFormat
+import java.util.Arrays
+import java.util.Calendar
+import java.util.Date
+import java.util.HashMap
+import java.util.concurrent.TimeUnit
+import java.util.regex.Pattern
+
 import android.content.Context
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
 import android.view.View
 import android.widget.TextView
+
 import androidx.appcompat.app.AppCompatActivity
-import com.huawei.hms.hihealth.*
-import com.huawei.hms.hihealth.data.*
+
+import com.huawei.hms.hihealth.ActivityRecordsController
+import com.huawei.hms.hihealth.DataController
+import com.huawei.hms.hihealth.HiHealthActivities
+import com.huawei.hms.hihealth.HuaweiHiHealth
+import com.huawei.hms.hihealth.HiHealthStatusCodes
+import com.huawei.hms.hihealth.data.ActivityRecord
+import com.huawei.hms.hihealth.data.ActivitySummary
+import com.huawei.hms.hihealth.data.DataCollector
+import com.huawei.hms.hihealth.data.DataType
+import com.huawei.hms.hihealth.data.Field
+import com.huawei.hms.hihealth.data.PaceSummary
 import com.huawei.hms.hihealth.data.SamplePoint
+import com.huawei.hms.hihealth.data.SampleSet
 import com.huawei.hms.hihealth.options.ActivityRecordInsertOptions
 import com.huawei.hms.hihealth.options.ActivityRecordReadOptions
 import com.huawei.hms.hihealth.options.DeleteOptions
-import com.huawei.hms.support.hwid.HuaweiIdAuthManager
-import java.text.DateFormat
-import java.util.*
-import java.util.concurrent.TimeUnit
-import java.util.regex.Pattern
-
 
 class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
     private val TAG = "ActivityRecordSample"
@@ -39,9 +68,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
     // Text view for displaying operation information on the UI
     private var logInfoView: TextView? = null
 
-    // PendingIntent
-    private var pendingIntent: PendingIntent? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         context = this
@@ -53,11 +79,9 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
      * Initialization
      */
     private fun init() {
-        val hiHealthOptions = HiHealthOptions.builder().build()
-        val signInHuaweiId = HuaweiIdAuthManager.getExtendedAuthResult(hiHealthOptions)
-        dataController = context?.let { HuaweiHiHealth.getDataController(it, signInHuaweiId) }
+        dataController = context?.let { HuaweiHiHealth.getDataController(it) }
         activityRecordsController =
-            context?.let { HuaweiHiHealth.getActivityRecordsController(it, signInHuaweiId) }
+            context?.let { HuaweiHiHealth.getActivityRecordsController(it) }
         logInfoView = findViewById(R.id.activity_records_controller_log_info)
         logInfoView!!.movementMethod = ScrollingMovementMethod.getInstance()
     }
@@ -67,26 +91,59 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
      *
      * @param view indicating a UI object
      */
-    fun beginActivityRecord(view: View) {
+    open fun beginActivityRecord(view: View?): Unit {
         logger(SPLIT + "this is MyActivityRecord Begin")
         val startTime = Calendar.getInstance().timeInMillis
+        val activitySummary: ActivitySummary? = getActivitySummary()
 
         // Build an ActivityRecord object
-        val activityRecord = ActivityRecord.Builder().setId("MyBeginActivityRecordId")
-            .setName("BeginActivityRecord")
-            .setDesc("This is ActivityRecord begin test!")
-            .setActivityTypeId(HiHealthActivities.RUNNING)
-            .setStartTime(startTime, TimeUnit.MILLISECONDS)
-            .build()
-
+        val activityRecord =
+            ActivityRecord.Builder().setId("MyBeginActivityRecordId")
+                .setName("BeginActivityRecord")
+                .setDesc("This is ActivityRecord begin test!")
+                .setActivityTypeId(HiHealthActivities.RUNNING)
+                .setStartTime(startTime, TimeUnit.MILLISECONDS)
+                .setActivitySummary(activitySummary)
+                .setTimeZone("+0800")
+                .build()
         checkConnect()
 
         // Add a listener for the ActivityRecord start success
-        val beginTask = activityRecordsController!!.beginActivityRecord(activityRecord)
+        val beginTask =
+            activityRecordsController!!.beginActivityRecord(activityRecord)
 
         // Add a listener for the ActivityRecord start failure
         beginTask.addOnSuccessListener { logger("MyActivityRecord begin success") }
             .addOnFailureListener { e -> printFailureMessage(e, "beginActivityRecord") }
+    }
+
+    private fun getActivitySummary(): ActivitySummary? {
+        val activitySummary = ActivitySummary()
+        val paceSummary = PaceSummary()
+        paceSummary.avgPace = 247.27626
+        paceSummary.bestPace = 212.0
+        val britishPaceMap: MutableMap<String, Double> =
+            HashMap()
+        britishPaceMap["50001893"] = 365.0
+        paceSummary.britishPaceMap = britishPaceMap
+        val partTimeMap: MutableMap<String, Double> =
+            HashMap()
+        partTimeMap["1.0"] = 456.0
+        paceSummary.partTimeMap = partTimeMap
+        val paceMap: MutableMap<String, Double> =
+            HashMap()
+        paceMap["1.0"] = 263.0
+        paceSummary.paceMap = paceMap
+        val britishPartTimeMap: MutableMap<String, Double> =
+            HashMap()
+        britishPartTimeMap["1.0"] = 263.0
+        paceSummary.britishPartTimeMap = britishPartTimeMap
+        val sportHealthPaceMap: MutableMap<String, Double> =
+            HashMap()
+        sportHealthPaceMap["102802480"] = 535.0
+        paceSummary.sportHealthPaceMap = sportHealthPaceMap
+        activitySummary.paceSummary = paceSummary
+        return activitySummary
     }
 
     /**
@@ -169,7 +226,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             .build()
         val samplePoint1 = SamplePoint.Builder(dataCollector2).build()
             .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS);
-        samplePoint1.getFieldValue(Field.FIELD_STEPS).setIntValue(352)
+        samplePoint1.getFieldValue(Field.FIELD_STEPS).setIntValue(1024)
         activitySummary.dataSummary = Arrays.asList(samplePoint1)
 
         // Build the activity record request object
@@ -311,7 +368,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         // Build the request body for reading activity records
         val readRequest = ActivityRecordReadOptions.Builder()
             .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-            .readActivityRecordsFromAllApps()
             .read(DataType.DT_CONTINUOUS_STEPS_DELTA)
             .build()
 
@@ -385,10 +441,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
      */
     private fun checkConnect() {
         if (activityRecordsController == null) {
-            val hiHealthOptions = HiHealthOptions.builder().build()
-            val signInHuaweiId = HuaweiIdAuthManager.getExtendedAuthResult(hiHealthOptions)
-            activityRecordsController =
-                HuaweiHiHealth.getActivityRecordsController(this, signInHuaweiId)
+            activityRecordsController = HuaweiHiHealth.getActivityRecordsController(this)
         }
     }
 
