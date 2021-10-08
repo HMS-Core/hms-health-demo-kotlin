@@ -16,13 +16,19 @@
 
 package com.huawei.demo.health
 
+import java.util.ArrayList;
+
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log;
 import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
 
 import com.huawei.demo.health.auth.HealthKitAuthActivity
+import com.huawei.hms.common.ApiException
+import com.huawei.hms.support.account.AccountAuthManager
+import com.huawei.hms.support.account.request.AccountAuthParamsHelper
 
 class HealthKitMainActivity : AppCompatActivity() {
     private val TAG = "KitConnectActivity"
@@ -90,5 +96,31 @@ class HealthKitMainActivity : AppCompatActivity() {
     fun hihealthHealthControllerOnclick(view: View) {
         val intent = Intent(this, HealthKitHealthRecordControllerActivity::class.java)
         startActivity(intent)
+    }
+    
+    
+    /**
+     * To improve privacy security, your app should allow users to cancel authorization.
+     * After calling this function, you need to call login and authorize again.
+     *
+     * @param view (indicating a UI object)
+     */
+    fun cancelScope(view: View) {
+        val authParams = AccountAuthParamsHelper().setAccessToken().setScopeList(ArrayList()).createParams()
+        val authService = AccountAuthManager.getService(applicationContext, authParams)
+        authService.cancelAuthorization().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                //取消授权成功后的处理
+                Log.i(TAG, "cancelAuthorization success")
+            } else {
+                //取消授权失败后的处理
+                val exception = task.exception
+                Log.i(TAG, "cancelAuthorization fail")
+                if (exception is ApiException) {
+                    val statusCode = exception.statusCode
+                    Log.e(TAG, "cancelAuthorization fail for errorCode: $statusCode")
+                }
+            }
+        }
     }
 }
