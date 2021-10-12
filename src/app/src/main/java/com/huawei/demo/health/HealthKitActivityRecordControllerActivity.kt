@@ -122,10 +122,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val paceSummary = PaceSummary()
         paceSummary.avgPace = 247.27626
         paceSummary.bestPace = 212.0
-        val britishPaceMap: MutableMap<String, Double> =
-            HashMap()
-        britishPaceMap["50001893"] = 365.0
-        paceSummary.britishPaceMap = britishPaceMap
         val partTimeMap: MutableMap<String, Double> =
             HashMap()
         partTimeMap["1.0"] = 456.0
@@ -134,10 +130,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             HashMap()
         paceMap["1.0"] = 263.0
         paceSummary.paceMap = paceMap
-        val britishPartTimeMap: MutableMap<String, Double> =
-            HashMap()
-        britishPartTimeMap["1.0"] = 263.0
-        paceSummary.britishPartTimeMap = britishPartTimeMap
         val sportHealthPaceMap: MutableMap<String, Double> =
             HashMap()
         sportHealthPaceMap["102802480"] = 535.0
@@ -193,10 +185,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val paceSummary = PaceSummary()
         paceSummary.avgPace = 247.27626
         paceSummary.bestPace = 212.0
-        val britishPaceMap: MutableMap<String, Double> =
-            HashMap()
-        britishPaceMap["50001893"] = 365.0
-        paceSummary.britishPaceMap = britishPaceMap
         val partTimeMap: MutableMap<String, Double> =
             HashMap()
         partTimeMap["1.0"] = 456.0
@@ -205,10 +193,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             HashMap()
         paceMap["1.0"] = 263.0
         paceSummary.paceMap = paceMap
-        val britishPartTimeMap: MutableMap<String, Double> =
-            HashMap()
-        britishPartTimeMap["1.0"] = 263.0
-        paceSummary.britishPartTimeMap = britishPartTimeMap
         val sportHealthPaceMap: MutableMap<String, Double> =
             HashMap()
         sportHealthPaceMap["102802480"] = 535.0
@@ -343,8 +327,6 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
 	 BestPace${paceSummary.bestPace}
 	 PaceMap${paceSummary.paceMap}
 	 PartTimeMap${paceSummary.partTimeMap}
-	 BritishPaceMap${paceSummary.britishPaceMap}
-	 BritishPartTimeMap${paceSummary.britishPartTimeMap}
 	 SportHealthPaceMap${paceSummary.sportHealthPaceMap}"""
         )
     }
