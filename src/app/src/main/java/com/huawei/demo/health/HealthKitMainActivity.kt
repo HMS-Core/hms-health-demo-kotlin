@@ -110,10 +110,10 @@ class HealthKitMainActivity : AppCompatActivity() {
         val authService = AccountAuthManager.getService(applicationContext, authParams)
         authService.cancelAuthorization().addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                //取消授权成功后的处理
+                // Processing after successful cancellation of authorization
                 Log.i(TAG, "cancelAuthorization success")
             } else {
-                //取消授权失败后的处理
+                // Processing after failed cancellation of authorization
                 val exception = task.exception
                 Log.i(TAG, "cancelAuthorization fail")
                 if (exception is ApiException) {
