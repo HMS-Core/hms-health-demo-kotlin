@@ -102,12 +102,15 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
-        val stepsDelta = 1000
+        val stepsDelta = 200
 
         // 4. Build a DT_CONTINUOUS_STEPS_DELTA sampling point.
         val samplePoint = sampleSet.createSamplePoint()
             .setTimeInterval(startDate.time, endDate.time, TimeUnit.MILLISECONDS)
         samplePoint.getFieldValue(Field.FIELD_STEPS_DELTA).setIntValue(stepsDelta)
+        // If the written step count data needs to be displayed on the homepage of the Huawei Health App,
+        // you need to use addMetadata to add the following metadata to the sampling point
+        samplePoint.addMetadata("motion_type", "RUN")
 
         // 5. Save a DT_CONTINUOUS_STEPS_DELTA sampling point to the sampling dataset.
         // You can repeat steps 3 through 5 to add more sampling points to the sampling dataset.
@@ -185,12 +188,15 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
         val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
-        val stepsDelta = 2000
+        val stepsDelta = 300
 
         // 4. Build a DT_CONTINUOUS_STEPS_DELTA sampling point for the update.
         val samplePoint = sampleSet.createSamplePoint()
             .setTimeInterval(startDate.time, endDate.time, TimeUnit.MILLISECONDS)
         samplePoint.getFieldValue(Field.FIELD_STEPS_DELTA).setIntValue(stepsDelta)
+        // If the updated step count data needs to be displayed on the homepage of the Huawei Health App,
+        // you need to use addMetadata to add the following metadata to the sampling point
+        samplePoint.addMetadata("motion_type", "RUN")
 
         // 5. Add an updated DT_CONTINUOUS_STEPS_DELTA sampling point to the sampling dataset for the update.
         // You can repeat steps 3 through 5 to add more updated sampling points to the sampling dataset for the update.
