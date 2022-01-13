@@ -16,16 +16,18 @@
 
 package com.huawei.demo.health
 
-import java.util.ArrayList;
+import java.util.ArrayList
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log;
+import android.util.Log
 import android.view.View
 
 import androidx.appcompat.app.AppCompatActivity
 
 import com.huawei.demo.health.auth.HealthKitAuthActivity
+import com.huawei.hmf.tasks.OnCompleteListener
+import com.huawei.hmf.tasks.Task
 import com.huawei.hms.common.ApiException
 import com.huawei.hms.support.account.AccountAuthManager
 import com.huawei.hms.support.account.request.AccountAuthParamsHelper
@@ -97,8 +99,7 @@ class HealthKitMainActivity : AppCompatActivity() {
         val intent = Intent(this, HealthKitHealthRecordControllerActivity::class.java)
         startActivity(intent)
     }
-    
-    
+
     /**
      * To improve privacy security, your app should allow users to cancel authorization.
      * After calling this function, you need to call login and authorize again.
@@ -108,17 +109,21 @@ class HealthKitMainActivity : AppCompatActivity() {
     fun cancelScope(view: View) {
         val authParams = AccountAuthParamsHelper().setAccessToken().setScopeList(ArrayList()).createParams()
         val authService = AccountAuthManager.getService(applicationContext, authParams)
-        authService.cancelAuthorization().addOnCompleteListener { task ->
+        authService.cancelAuthorization().addOnCompleteListener(TaskOnCompleteListener())
+    }
+
+    private class TaskOnCompleteListener : OnCompleteListener<Void> {
+        override fun onComplete(task: Task<Void>) {
             if (task.isSuccessful) {
                 // Processing after successful cancellation of authorization
-                Log.i(TAG, "cancelAuthorization success")
+                Log.i("TAG", "cancelAuthorization success")
             } else {
                 // Processing after failed cancellation of authorization
                 val exception = task.exception
-                Log.i(TAG, "cancelAuthorization fail")
+                Log.i("TAG", "cancelAuthorization fail")
                 if (exception is ApiException) {
                     val statusCode = exception.statusCode
-                    Log.e(TAG, "cancelAuthorization fail for errorCode: $statusCode")
+                    Log.e("TAG", "cancelAuthorization fail for errorCode: $statusCode")
                 }
             }
         }

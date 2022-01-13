@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat
 class HealthKitAutoRecorderControllerActivity : AppCompatActivity() {
     private val TAG = "AutoRecorderTest"
 
+    // Line separators for the display on the UI
     private val SPLIT = "*******************************" + System.lineSeparator()
 
     // HMS Health AutoRecorderController
@@ -66,15 +67,20 @@ class HealthKitAutoRecorderControllerActivity : AppCompatActivity() {
     // WakeLock
     private var wl: PowerManager.WakeLock? = null
 
+    /**
+     * add app to the battery optimization trust list, to avoid the app be killed
+     *
+     * @param activity activity
+     */
     fun ignoreBatteryOptimization(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
-                val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-                val hasIgnored = powerManager.isIgnoringBatteryOptimizations(activity.packageName)
                 /**
                  * Check whether the current app is added to the battery optimization trust list,
                  * If not, a dialog box is displayed for you to add a battery optimization trust list.
                  */
+                val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+                val hasIgnored = powerManager.isIgnoringBatteryOptimizations(activity.packageName)
                 if (!hasIgnored) {
                     val newIntent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
                     newIntent.data = Uri.parse("package:" + activity.packageName)

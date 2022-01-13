@@ -46,9 +46,9 @@ import com.huawei.hms.hihealth.data.Field
 import com.huawei.hms.hihealth.data.PaceSummary
 import com.huawei.hms.hihealth.data.SamplePoint
 import com.huawei.hms.hihealth.data.SampleSet
+import com.huawei.hms.hihealth.options.ActivityRecordDeleteOptions
 import com.huawei.hms.hihealth.options.ActivityRecordInsertOptions
 import com.huawei.hms.hihealth.options.ActivityRecordReadOptions
-import com.huawei.hms.hihealth.options.DeleteOptions
 
 class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
     private val TAG = "ActivityRecordSample"
@@ -113,7 +113,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             activityRecordsController!!.beginActivityRecord(activityRecord)
 
         // Add a listener for the ActivityRecord start failure
-        beginTask.addOnSuccessListener { logger("MyActivityRecord begin success") }
+        beginTask.addOnSuccessListener { logger("Begin MyActivityRecord was successful!") }
             .addOnFailureListener { e -> printFailureMessage(e, "beginActivityRecord") }
     }
 
@@ -122,6 +122,10 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val paceSummary = PaceSummary()
         paceSummary.avgPace = 247.27626
         paceSummary.bestPace = 212.0
+        val britishPaceMap: MutableMap<String, Double> =
+            HashMap()
+        britishPaceMap["50001893"] = 365.0
+        paceSummary.britishPaceMap = britishPaceMap
         val partTimeMap: MutableMap<String, Double> =
             HashMap()
         partTimeMap["1.0"] = 456.0
@@ -130,6 +134,10 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             HashMap()
         paceMap["1.0"] = 263.0
         paceSummary.paceMap = paceMap
+        val britishPartTimeMap: MutableMap<String, Double> =
+            HashMap()
+        britishPartTimeMap["1.0"] = 263.0
+        paceSummary.britishPartTimeMap = britishPartTimeMap
         val sportHealthPaceMap: MutableMap<String, Double> =
             HashMap()
         sportHealthPaceMap["102802480"] = 535.0
@@ -152,7 +160,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         // Stop activity records of the current app by specifying null as the input parameter
         val endTask = activityRecordsController!!.endActivityRecord("MyBeginActivityRecordId")
         endTask.addOnSuccessListener { activityRecords ->
-            logger("MyActivityRecord End success")
+            logger("End MyActivityRecord was successful!")
             // Return the list of activity records that have stopped
             if (activityRecords.size > 0) {
                 for (activityRecord in activityRecords) {
@@ -185,6 +193,10 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val paceSummary = PaceSummary()
         paceSummary.avgPace = 247.27626
         paceSummary.bestPace = 212.0
+        val britishPaceMap: MutableMap<String, Double> =
+            HashMap()
+        britishPaceMap["50001893"] = 365.0
+        paceSummary.britishPaceMap = britishPaceMap
         val partTimeMap: MutableMap<String, Double> =
             HashMap()
         partTimeMap["1.0"] = 456.0
@@ -193,6 +205,10 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             HashMap()
         paceMap["1.0"] = 263.0
         paceSummary.paceMap = paceMap
+        val britishPartTimeMap: MutableMap<String, Double> =
+            HashMap()
+        britishPartTimeMap["1.0"] = 263.0
+        paceSummary.britishPartTimeMap = britishPartTimeMap
         val sportHealthPaceMap: MutableMap<String, Double> =
             HashMap()
         sportHealthPaceMap["102802480"] = 535.0
@@ -200,18 +216,40 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         activitySummary.setPaceSummary(paceSummary)
 
 
-        // 创建一个总步数统计的数据采集器
-        // ActivitySummary 用来承载统计数据
-        val dataCollector2: DataCollector = DataCollector.Builder()
-            .setDataType(DataType.DT_CONTINUOUS_STEPS_TOTAL)
+        // Create data collectors for the step, distance, speed count data.
+        val dataCollectorDistanceTotal =
+            com.huawei.hms.hihealth.data.DataCollector.Builder().setDataType(DataType.DT_CONTINUOUS_DISTANCE_TOTAL)
+                .setDataGenerateType(DataCollector.DATA_TYPE_RAW)
+                .setPackageName(context)
+                .setDataCollectorName("test1")
+                .build()
+        val dataCollectorSpeedTotal = com.huawei.hms.hihealth.data.DataCollector.Builder()
+            .setDataType(DataType.POLYMERIZE_CONTINUOUS_SPEED_STATISTICS)
             .setDataGenerateType(DataCollector.DATA_TYPE_RAW)
-            .setPackageName(applicationContext)
+            .setPackageName(context)
             .setDataCollectorName("test1")
             .build()
-        val samplePoint1 = SamplePoint.Builder(dataCollector2).build()
-            .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS);
-        samplePoint1.getFieldValue(Field.FIELD_STEPS).setIntValue(1024)
-        activitySummary.dataSummary = Arrays.asList(samplePoint1)
+        val dataCollectorStepTotal =
+            com.huawei.hms.hihealth.data.DataCollector.Builder().setDataType(DataType.DT_CONTINUOUS_STEPS_TOTAL)
+                .setDataGenerateType(DataCollector.DATA_TYPE_RAW)
+                .setPackageName(context)
+                .setDataCollectorName("test1")
+                .build()
+        val distanceTotalSamplePoint = SamplePoint.Builder(dataCollectorDistanceTotal).build()
+            .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS)
+        distanceTotalSamplePoint.getFieldValue(Field.FIELD_DISTANCE).setFloatValue(400f)
+
+        val speedTotalSamplePoint = SamplePoint.Builder(dataCollectorSpeedTotal).build()
+            .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS)
+        speedTotalSamplePoint.getFieldValue(Field.FIELD_AVG).setFloatValue(60.0f)
+        speedTotalSamplePoint.getFieldValue(Field.FIELD_MIN).setFloatValue(40.0f)
+        speedTotalSamplePoint.getFieldValue(Field.FIELD_MAX).setFloatValue(80.0f)
+
+        val stepTotalSamplePoint = SamplePoint.Builder(dataCollectorStepTotal).build()
+            .setTimeInterval(startTime + 1L, startTime + 300000L, TimeUnit.MILLISECONDS)
+        stepTotalSamplePoint.getFieldValue(Field.FIELD_STEPS).setIntValue(1024)
+        activitySummary.dataSummary =
+            Arrays.asList(distanceTotalSamplePoint, speedTotalSamplePoint, stepTotalSamplePoint)
 
         // Build the activity record request object
         val activityRecord = ActivityRecord.Builder().setName("AddActivityRecord")
@@ -225,7 +263,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
             .build()
 
         // Build the dataCollector object
-        val dataCollector = DataCollector.Builder().setDataType(DataType.DT_CONTINUOUS_STEPS_DELTA)
+        val dataCollector = DataCollector.Builder().setDataType(DataType.DT_INSTANTANEOUS_STEPS_RATE)
             .setDataGenerateType(DataCollector.DATA_TYPE_RAW)
             .setPackageName(context)
             .setDataCollectorName("AddActivityRecord")
@@ -234,10 +272,10 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         // Build the sampling sampleSet based on the dataCollector
         val sampleSet = SampleSet.create(dataCollector)
 
-        // Build the (DT_CONTINUOUS_STEPS_DELTA) sampling data object and add it to the sampling dataSet
+        // Build the (DT_INSTANTANEOUS_STEPS_RATE) sampling data object and add it to the sampling dataSet
         val samplePoint =
             sampleSet.createSamplePoint().setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-        samplePoint.getFieldValue(Field.FIELD_STEPS_DELTA).setIntValue(1024)
+        samplePoint.getFieldValue(Field.FIELD_STEP_RATE).setFloatValue(10.0f)
         sampleSet.addSample(samplePoint)
 
         // Build the activity record addition request object
@@ -248,7 +286,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
 
         // Call the related method in the ActivityRecordsController to add activity records
         val addTask = activityRecordsController!!.addActivityRecord(insertRequest)
-        addTask.addOnSuccessListener { logger("ActivityRecord add was successful!") }
+        addTask.addOnSuccessListener { logger("Add MyActivityRecord was successful!") }
             .addOnFailureListener { e -> printFailureMessage(e, "addActivityRecord") }
     }
 
@@ -272,7 +310,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         val readRequest = ActivityRecordReadOptions.Builder()
             .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
             .readActivityRecordsFromAllApps()
-            .read(DataType.DT_CONTINUOUS_STEPS_DELTA)
+            .read(DataType.DT_INSTANTANEOUS_STEPS_RATE)
             .build()
 
         checkConnect()
@@ -281,7 +319,7 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         // from the Health platform based on the conditions in the request body
         val getTask = activityRecordsController!!.getActivityRecord(readRequest)
         getTask.addOnSuccessListener { activityRecordReply ->
-            logger("Get ActivityRecord was successful!")
+            logger("Get MyActivityRecord was successful!")
             // Print ActivityRecord and corresponding activity data in the result
             val activityRecordList = activityRecordReply.activityRecords
             for (activityRecord in activityRecordList) {
@@ -301,33 +339,23 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
 
     fun printActivitySummary(activitySummary: ActivitySummary) {
         val dataSummary = activitySummary.dataSummary
-        Log.i(TAG, "\n打印统计数据: ")
-        Log.i(TAG, "\nActivitySummary\n\t DataSummary: ")
+        logger("\nActivitySummary\n\t DataSummary: ")
         for (samplePoint in dataSummary) {
-            Log.i(
-                TAG,
-                """
-	 samplePoint: 
-	 DataCollector${samplePoint.dataCollector}
-	 DataType${samplePoint.dataType}
-	 StartTime${samplePoint.getStartTime(TimeUnit.MILLISECONDS)}
-	 EndTime""" + samplePoint.getEndTime(
-                    TimeUnit.MILLISECONDS
-                )
-                        + "\n\t SamplingTime" + samplePoint.getSamplingTime(TimeUnit.MILLISECONDS) + "\n\t FieldValues" + samplePoint.fieldValues
+            logger(
+                "\n\t samplePoint: \n\t DataCollector" + samplePoint.dataCollector + "\n\t DataType"
+                        + samplePoint.dataType + "\n\t StartTime" + samplePoint.getStartTime(TimeUnit.MILLISECONDS)
+                        + "\n\t EndTime" + samplePoint.getEndTime(TimeUnit.MILLISECONDS) + "\n\t SamplingTime"
+                        + samplePoint.getSamplingTime(TimeUnit.MILLISECONDS) + "\n\t FieldValues"
+                        + samplePoint.fieldValues
             )
         }
-        // 以下打印配速信息
+        // Printing PaceSummary
         val paceSummary = activitySummary.paceSummary
-        Log.i(
-            TAG,
-            """
-	 PaceSummary: 
-	 AvgPace${paceSummary.avgPace}
-	 BestPace${paceSummary.bestPace}
-	 PaceMap${paceSummary.paceMap}
-	 PartTimeMap${paceSummary.partTimeMap}
-	 SportHealthPaceMap${paceSummary.sportHealthPaceMap}"""
+        logger(
+            ("\n\t PaceSummary: \n\t AvgPace" + paceSummary.avgPace + "\n\t BestPace" + paceSummary.bestPace
+                    + "\n\t PaceMap" + paceSummary.paceMap + "\n\t PartTimeMap" + paceSummary.partTimeMap
+                    + "\n\t BritishPaceMap" + paceSummary.britishPaceMap + "\n\t BritishPartTimeMap"
+                    + paceSummary.britishPartTimeMap + "\n\t SportHealthPaceMap" + paceSummary.sportHealthPaceMap)
         )
     }
 
@@ -342,40 +370,30 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         // Build the time range of the request object: start time and end time
         val cal = Calendar.getInstance()
         val now = Date()
-        cal.time = now
-        val endTime = cal.timeInMillis
-        cal.add(Calendar.DAY_OF_YEAR, -2)
-        val startTime = cal.timeInMillis
+        cal.setTime(now)
+        val endTime = cal.getTimeInMillis()
+        cal.add(Calendar.HOUR_OF_DAY, -1)
+        val startTime = cal.getTimeInMillis()
 
-        // Build the request body for reading activity records
-        val readRequest = ActivityRecordReadOptions.Builder()
-            .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-            .read(DataType.DT_CONTINUOUS_STEPS_DELTA)
-            .build()
 
-        // Call the read method of the ActivityRecordsController to obtain activity records
+        // Build the subDataTypeList
+        val subDataTypeList = listOf(DataType.DT_CONTINUOUS_STEPS_DELTA)
+        // Build the activityRecordIds
+        val activityRecordIds = listOf("MyAddActivityRecordId")
+
+        // Build the request body for delete activity records
+        val deleteRequest = ActivityRecordDeleteOptions.Builder()
+                .setSubDataTypeList(subDataTypeList)
+                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+                .setActivityRecordIds(activityRecordIds)
+                .isDeleteSubData(true)
+                .build()
+
+        // Call the delete method of the ActivityRecordsController
         // from the Health platform based on the conditions in the request body
-        val getTask = activityRecordsController!!.getActivityRecord(readRequest)
-        getTask.addOnSuccessListener { activityRecordReply ->
-            Log.i(TAG, "Reading ActivityRecord  response status " + activityRecordReply.status)
-            val activityRecords = activityRecordReply.activityRecords
-
-            // Get ActivityRecord and corresponding activity data in the result
-            for (activityRecord in activityRecords) {
-                val deleteOptions = DeleteOptions.Builder().addActivityRecord(activityRecord)
-                    .setTimeInterval(
-                        activityRecord.getStartTime(TimeUnit.MILLISECONDS),
-                        activityRecord.getEndTime(TimeUnit.MILLISECONDS), TimeUnit.MILLISECONDS
-                    )
-                    .build()
-                logger("begin delete ActivitiRecord is :" + activityRecord.id)
-
-                // Delete ActivityRecord
-                val deleteTask = dataController!!.delete(deleteOptions)
-                deleteTask.addOnSuccessListener { logger("delete ActivitiRecord is Success:" + activityRecord.id) }
-                    .addOnFailureListener { e -> printFailureMessage(e, "delete") }
-            }
-        }.addOnFailureListener { e -> printFailureMessage(e, "delete") }
+        val deleteTask = activityRecordsController!!.deleteActivityRecord(deleteRequest)
+        deleteTask.addOnSuccessListener { logger("Delete MyActivityRecord was successful!") }
+            .addOnFailureListener { e -> printFailureMessage(e, "deleteActivityRecord") }
     }
 
     /**
@@ -406,15 +424,16 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
     private fun dumpActivityRecord(activityRecord: ActivityRecord) {
         val dateFormat = DateFormat.getDateInstance()
         val timeFormat = DateFormat.getTimeInstance()
+        logger("ActivityRecord Printing -------------------------------------")
         logger(
-            ("Returned for ActivityRecord: " + activityRecord.name + "\n\tActivityRecord Identifier is "
+            "Returned for ActivityRecord: " + activityRecord.name + "\n\tActivityRecord Identifier is "
                     + activityRecord.id + "\n\tActivityRecord created by app is " + activityRecord.packageName
                     + "\n\tDescription: " + activityRecord.desc + "\n\tStart: "
                     + dateFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + " "
                     + timeFormat.format(activityRecord.getStartTime(TimeUnit.MILLISECONDS)) + "\n\tEnd: "
                     + dateFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + " "
                     + timeFormat.format(activityRecord.getEndTime(TimeUnit.MILLISECONDS)) + "\n\tActivity:"
-                    + activityRecord.activityType)
+                    + activityRecord.activityType
         )
     }
 

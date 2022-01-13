@@ -172,6 +172,7 @@ class HealthKitAuthActivity : Activity() {
 
         // Authentication failure message. if error message is not null, displayed based on the error code.
         val failedResult = StringBuilder()
+        // process HUAWEI ID sign in error
         if (errorCode == HiHealthStatusCodes.HUAWEI_ID_SIGNIN_ERROR || CommonConstant.RETCODE.SIGN_IN_AUTH <= errorCode && errorCode <= CommonConstant.RETCODE.SIGN_IN_EXECUTING) {
             failedResult
                 .append(String.format(Locale.ENGLISH, resources.getString(R.string.healthkit_auth_result1_fail), "HealthKitDemo"))
@@ -184,6 +185,7 @@ class HealthKitAuthActivity : Activity() {
         }
 
         failedResult.append(resources.getString(R.string.healthkit_auth_result2_fail))
+        // process HUAWEI health link to HUAWEI health kit error
         if (errorCode != 0 && errorCode != HiHealthStatusCodes.HEALTH_APP_NOT_AUTHORISED) {
             failedResult.append(resources.getString(R.string.healthkit_auth_result2_fail_error))
             if (errorCode == HiHealthStatusCodes.NON_HEALTH_USER) {

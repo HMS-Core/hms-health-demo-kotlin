@@ -194,7 +194,7 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
         val samplePoint = sampleSet.createSamplePoint()
             .setTimeInterval(startDate.time, endDate.time, TimeUnit.MILLISECONDS)
         samplePoint.getFieldValue(Field.FIELD_STEPS_DELTA).setIntValue(stepsDelta)
-        // If the updated step count data needs to be displayed on the homepage of the Huawei Health App,
+        // If the modified step count data needs to be displayed on the homepage of the Huawei Health App,
         // you need to use addMetadata to add the following metadata to the sampling point
         samplePoint.addMetadata("motion_type", "RUN")
 

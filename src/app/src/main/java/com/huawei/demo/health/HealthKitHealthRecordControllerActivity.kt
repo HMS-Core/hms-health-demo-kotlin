@@ -46,12 +46,13 @@ import com.huawei.hms.hihealth.data.HealthFields
 import com.huawei.hms.hihealth.data.HealthRecord
 import com.huawei.hms.hihealth.data.SamplePoint
 import com.huawei.hms.hihealth.data.SampleSet
+import com.huawei.hms.hihealth.options.HealthRecordDeleteOptions
 import com.huawei.hms.hihealth.options.HealthRecordInsertOptions
 import com.huawei.hms.hihealth.options.HealthRecordReadOptions
 import com.huawei.hms.hihealth.options.HealthRecordUpdateOptions
 
 /**
- * 功能描述
+ * HealthRecord Sample Code
  *
  * @since 2021-06-11
  */
@@ -160,8 +161,8 @@ class HealthKitHealthRecordControllerActivity : AppCompatActivity() {
             // Save the healthRecordId returned after the insertion is successful.
             // The healthRecordId is used to update the scenario.
             healthRecordIdFromInsertResult = healthRecordId
-            logger("health record add was successful,please save the healthRecordId:\n$healthRecordId")
-        }.addOnFailureListener { e -> printFailureMessage(e, "getHealthRecord") }
+            logger("Add HealthRecord was successful,please save the healthRecordId:\n$healthRecordId")
+        }.addOnFailureListener { e -> printFailureMessage(e, "addHealthRecord") }
     }
 
     /**
@@ -238,8 +239,8 @@ class HealthKitHealthRecordControllerActivity : AppCompatActivity() {
             .build()
 
         healthRecordController!!.updateHealthRecord(updateOptions)
-            .addOnSuccessListener { logger("update healthRecord success") }
-            .addOnFailureListener { e -> printFailureMessage(e, "UpdateHealthRecord") }
+            .addOnSuccessListener { logger("Update HealthRecord was successful!") }
+            .addOnFailureListener { e -> printFailureMessage(e, "updateHealthRecord") }
     }
 
     /**
@@ -287,6 +288,52 @@ class HealthKitHealthRecordControllerActivity : AppCompatActivity() {
             }
         }
         task.addOnFailureListener { e -> printFailureMessage(e, "getHealthRecord") }
+    }
+
+    /**
+     * delete historical health records
+     *
+     * @param view indicating a UI object
+     */
+    fun deleteHealthRecord(view: View) {
+        logger(SPLIT + "this is MyHealthRecord Delete")
+
+        // Build the time range of the request object: start time and end time
+        val cal = Calendar.getInstance()
+        val now = Date()
+        cal.time = now
+        val endTime = cal.timeInMillis
+        cal.add(Calendar.DAY_OF_MONTH, -2)
+        val startTime = cal.timeInMillis
+
+        // 1.Create a collector that carries the heart rate detail data type and a sampleSetList that stores the detail data.
+        val dataCollector = DataCollector.Builder()
+            .setDataType(HealthDataTypes.DT_HEALTH_RECORD_BRADYCARDIA)
+            .setDataGenerateType(DataCollector.DATA_TYPE_RAW)
+            .setPackageName(context!!)
+            .setDataStreamName("such as step count")
+            .build()
+
+        // Build the dataType
+        val dataType = dataCollector.dataType
+        // Build the subDataTypeList
+        val subDataTypeList = ArrayList<DataType>()
+        subDataTypeList.add(DataType.DT_INSTANTANEOUS_HEART_RATE)
+
+        // Build the request body for delete health records
+        val deleteRequest = HealthRecordDeleteOptions.Builder()
+            .setHealthRecordIds(listOf(healthRecordIdFromInsertResult))
+            .isDeleteSubData(true)
+            .setDataType(dataType)
+            .setSubDataTypeList(subDataTypeList)
+            .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
+            .build()
+
+        // Call the delete method of the HealthRecordController
+        // from the Health platform based on the conditions in the request body
+        val deleteTask = healthRecordController!!.deleteHealthRecord(deleteRequest)
+        deleteTask.addOnSuccessListener { logger("Delete HealthRecord was successful!") }
+            .addOnFailureListener { e -> printFailureMessage(e, "deleteHealthRecord") }
     }
 
     /**
