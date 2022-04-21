@@ -16,6 +16,7 @@
 
 package com.huawei.demo.health
 
+import android.content.ComponentName
 import java.text.DateFormat
 import java.util.Arrays
 import java.util.Calendar
@@ -25,6 +26,7 @@ import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.util.Log
@@ -49,6 +51,7 @@ import com.huawei.hms.hihealth.data.SampleSet
 import com.huawei.hms.hihealth.options.ActivityRecordDeleteOptions
 import com.huawei.hms.hihealth.options.ActivityRecordInsertOptions
 import com.huawei.hms.hihealth.options.ActivityRecordReadOptions
+import com.huawei.hms.hihealth.options.OnActivityRecordListener
 
 class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
     private val TAG = "ActivityRecordSample"
@@ -108,13 +111,88 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
                 .build()
         checkConnect()
 
-        // Add a listener for the ActivityRecord start success
+        // begin ActivityRecord
         val beginTask =
             activityRecordsController!!.beginActivityRecord(activityRecord)
 
-        // Add a listener for the ActivityRecord start failure
+        // Add listeners for the ActivityRecord start
         beginTask.addOnSuccessListener { logger("Begin MyActivityRecord was successful!") }
             .addOnFailureListener { e -> printFailureMessage(e, "beginActivityRecord") }
+    }
+
+    /**
+     * Start an keep background running activity record
+     *
+     * @param view indicating a UI object
+     */
+    fun beginBackgroundActivityRecord(view: View) {
+        logger(SPLIT + "this is MyBackgroundActivityRecord Begin")
+        val startTime = Calendar.getInstance().timeInMillis
+
+        val activitySummary = getActivitySummary()
+
+        // Build an ActivityRecord object
+        val activityRecord = ActivityRecord.Builder().setId("MyBackgroundActivityRecordId")
+            .setName("BeginActivityRecord")
+            .setDesc("This is ActivityRecord begin test!")
+            .setActivityTypeId(HiHealthActivities.RUNNING)
+            .setStartTime(startTime, TimeUnit.MILLISECONDS)
+            .setActivitySummary(activitySummary)
+            .setTimeZone("+0800")
+            .build()
+
+        checkConnect()
+
+        // Build ActivityRecord running activity
+        val componentName = ComponentName(this, HealthKitActivityRecordControllerActivity::class.java)
+
+        // Build OnActivityRecordListener
+        val activityRecordListener = OnActivityRecordListener { statusCode ->
+            logger("onStatusChange statusCode:$statusCode")
+            if (HiHealthStatusCodes.WORK_OUT_TIME_OUT == statusCode || HiHealthStatusCodes.WORK_OUT_BE_OCCUPIED == statusCode) {
+                stopService(getForegroundServiceIntent())
+            }
+        }
+
+        // begin ActivityRecord
+        val beginTask =
+            activityRecordsController!!.beginActivityRecord(activityRecord, componentName, activityRecordListener)
+
+        // Add listeners for the ActivityRecord start
+        beginTask.addOnSuccessListener {
+            startService(getForegroundServiceIntent())
+            logger("Begin MyActivityRecord was successful!")
+        }.addOnFailureListener { e -> printFailureMessage(e, "beginActivityRecord") }
+    }
+
+    /**
+     * End activity records run in background
+     *
+     * @param view indicating a UI object
+     */
+    fun endBackgroundActivityRecord(view: View) {
+        logger(SPLIT + "this is MyBackgroundActivityRecord End")
+
+        // Call the related method of ActivityRecordsController to stop activity records.
+        // The input parameter can be the ID string of ActivityRecord or null
+        // Stop an activity record of the current app by specifying the ID string as the input parameter
+        // Stop activity records of the current app by specifying null as the input parameter
+        val endTask = activityRecordsController!!.endActivityRecord("MyBackgroundActivityRecordId")
+        endTask.addOnSuccessListener { activityRecords ->
+            logger("End MyBackgroundActivity was successful!")
+            // Return the list of activity records that have stopped
+            if (activityRecords.size > 0) {
+                for (activityRecord in activityRecords) {
+                    dumpActivityRecord(activityRecord)
+                }
+            } else {
+                // Null will be returnded if none of the activity records has stopped
+                logger("MyBackgroundActivity End response is null")
+            }
+
+            // stop service if has started
+            stopService(getForegroundServiceIntent())
+        }.addOnFailureListener { e -> printFailureMessage(e, "endBackgroundActivityRecord") }
     }
 
     private fun getActivitySummary(): ActivitySummary? {
@@ -482,5 +560,16 @@ class HealthKitActivityRecordControllerActivity : AppCompatActivity() {
         if (offset > logInfoView!!.height) {
             logInfoView!!.scrollTo(0, offset - logInfoView!!.height)
         }
+    }
+
+    /**
+     * get Intent to start/stop ForegroundService
+     *
+     * @return Intent Foreground Service Intent
+     */
+    private fun getForegroundServiceIntent(): Intent {
+        val intent = Intent()
+        intent.setClassName(packageName, "com.huawei.demo.health.ActivityRecordForegroundService")
+        return intent
     }
 }

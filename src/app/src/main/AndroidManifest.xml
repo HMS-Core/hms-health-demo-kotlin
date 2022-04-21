@@ -39,12 +39,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".auth.HealthKitAuthActivity" />
-
         <service android:name="com.huawei.demo.health.PersistService">
             <intent-filter android:priority="1000">
                 <action android:name="HealthKitService"/>
             </intent-filter>
         </service>
+        <service android:name="com.huawei.demo.health.ActivityRecordForegroundService" />
     </application>
 
 </manifest>
