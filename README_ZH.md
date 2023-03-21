@@ -22,7 +22,7 @@ Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\Health
 
 2) 取消授权  
 支持用户取消账号授权。  
-Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\HealthKitMainActivity.kt
+Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\HealthKitMainActivity.kt
 
 3) 运动健康数据管理  
 支持用户对已授权的健康运动数据进行增加/删除/更新/查询等操作。  
@@ -60,8 +60,8 @@ Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\Health
 使用示例代码包中的功能之前，需要设置如下参数：    
 1.	华为账号：运动健康需要验证用户是否具有读写健康数据的权限。    
 2.	HMS SDK maven地址：
-    * 	在项目build.gradle的all projects->repositories中，配置HMS SDK的maven地址：maven {url 'https://developer.huawei.com/repo/' }
-    * 	在项目build.gradle的buildscript-> dependencies中，配置HMS SDK的maven配置：maven {url 'https://developer.huawei.com/repo/' }
+    * 	在项目build.gradle的allprojects->repositories中，配置HMS SDK的maven地址：maven {url 'https://developer.huawei.com/repo/' }
+    * 	在项目build.gradle的buildscript->repositories中，配置HMS SDK的maven配置：maven {url 'https://developer.huawei.com/repo/' }
 3.	编译依赖：在app层级的build.gradle文件中增加编译依赖：implementation 'com.huawei.hms:health:{version}'    
 4.	AppId信息：在应用的AndroidManifest.xml文件中添加在开发者联盟创建应用时生成的AppId信息。 
 
@@ -70,7 +70,7 @@ Android APIs代码位置:  \app\src\main\java\com\huawei\demo\health\auth\Health
 ## 环境要求
 * Android Studio 3.0 及以上版本。
 * Java SDK 1.8 及以上版本。
-* 手机Android Version大于6.0（API level > 23），或手机系统为HarmonyOS；装有HMS Core（APK）4.2.0.300及以上版本（如果需要读取运动健康App的数据，HMS Core（APK）须为5.0.4.300及以上版本，且手机装有的华为运动健康App的版本需为11.0.0.512及以上）。
+* 手机Android Version7.0-13（API level 24-33），或手机系统为HarmonyOS；装有HMS Core（APK）4.2.0.300及以上版本（如果需要读取运动健康App的数据，HMS Core（APK）须为5.0.4.300及以上版本）；手机装有华为运动健康App版本号11.0.0.512及以上。
 
 ## 操作结果
    <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_6.png" width = 30% height = 30%> <img src="images/result_2.png" width = 30% height = 30%> <img src="images/result_3.png" width = 30% height = 30%> <img src="images/result_4.png" width = 30% height = 30%> <img src="images/result_5.png" width = 30% height = 30%> 

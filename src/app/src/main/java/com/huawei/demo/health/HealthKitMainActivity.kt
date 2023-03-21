@@ -37,7 +37,7 @@ class HealthKitMainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_health_kit_main)
+        setContentView(R.layout.activity_healthkit_main)
     }
 
     /**
