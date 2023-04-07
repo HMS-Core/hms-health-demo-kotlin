@@ -99,7 +99,7 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
         val sampleSet = SampleSet.create(dataCollector)
 
         // 3. Build the start time, end time, and incremental step count for a DT_CONTINUOUS_STEPS_DELTA sampling point.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
         val stepsDelta = 200
@@ -144,7 +144,7 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
             .build()
 
         // 2. Build the time range for the deletion: start time and end time.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
 
@@ -185,7 +185,7 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
 
         // 3. Build the start time, end time, and incremental step count for
         // a DT_CONTINUOUS_STEPS_DELTA sampling point for the update.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
         val stepsDelta = 300
@@ -233,7 +233,7 @@ class HealthKitDataControllerActivity : AppCompatActivity() {
     @Throws(ParseException::class)
     fun readData(view: View) {
         // 1. Build the time range for the query: start time and end time.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-08-24 09:00:00")
         val endDate = dateFormat.parse("2020-08-24 09:05:00")
 

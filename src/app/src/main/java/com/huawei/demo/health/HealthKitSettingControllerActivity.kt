@@ -308,7 +308,7 @@ class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnIt
         val sampleSet = SampleSet.create(dataCollector)
 
         // 3. Build the start time, end time, and incremental step count for a DT_CONTINUOUS_STEPS_DELTA sampling point.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-03-17 09:00:00")
         val endDate = dateFormat.parse("2020-03-17 09:05:00")
         val intValue = 1000
@@ -381,7 +381,7 @@ class HealthKitSettingControllerActivity : AppCompatActivity(), AdapterView.OnIt
             .build()
 
         // 2. Build the time range for the query: start time and end time.
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.SIMPLIFIED_CHINESE)
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.SIMPLIFIED_CHINESE)
         val startDate = dateFormat.parse("2020-03-17 09:00:00")
         val endDate = dateFormat.parse("2020-03-17 09:05:00")
 
