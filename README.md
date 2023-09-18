@@ -60,7 +60,7 @@ To use functions provided by packages in examples, you need to set parameters as
 ## Supported Environments
 * Android Studio 3.6.1 or later.
 * Java SDK 1.8 or later.
-* Mobile Android Version 7.0-13 (API level 24-33) or HarmonyOS. HMS Core (APK) 4.2.0.300 or later has been installed on the phone. To read data from the Health app, HMS Core (APK) 5.0.4.300 or later should be installed. HUAWEI Health app of version 11.0.0.512 or later has been installed.
+* Mobile Android Version 7.0-13 (API level 24-33) or HarmonyOS. HMS Core (APK) 4.0.2.300 or later has been installed on the phone. To read data from the Health app, HMS Core (APK) 5.0.4.300 or later should be installed. HUAWEI Health app of version 11.0.0.512 or later has been installed.
 
 ## Result
    <img src="images/result_1.png" width = 30% height = 30%> <img src="images/result_5.png" width = 30% height = 30%>
